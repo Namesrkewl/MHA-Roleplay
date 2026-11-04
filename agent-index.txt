@@ -1,0 +1,28 @@
+MHA-Roleplay is a roleplay transcript (alternating User and Model turns) split into 23 numbered pages of up to 8000 characters each, in story order. Pages break between turns where possible, so read them in sequence; each is a plain HTML page. The main page lists every page with a short preview of how it opens.
+
+Main page: https://namesrkewl.github.io/MHA-Roleplay/
+
+Pages:
+https://namesrkewl.github.io/MHA-Roleplay/pages/MHA-Roleplay-001.html
+https://namesrkewl.github.io/MHA-Roleplay/pages/MHA-Roleplay-002.html
+https://namesrkewl.github.io/MHA-Roleplay/pages/MHA-Roleplay-003.html
+https://namesrkewl.github.io/MHA-Roleplay/pages/MHA-Roleplay-004.html
+https://namesrkewl.github.io/MHA-Roleplay/pages/MHA-Roleplay-005.html
+https://namesrkewl.github.io/MHA-Roleplay/pages/MHA-Roleplay-006.html
+https://namesrkewl.github.io/MHA-Roleplay/pages/MHA-Roleplay-007.html
+https://namesrkewl.github.io/MHA-Roleplay/pages/MHA-Roleplay-008.html
+https://namesrkewl.github.io/MHA-Roleplay/pages/MHA-Roleplay-009.html
+https://namesrkewl.github.io/MHA-Roleplay/pages/MHA-Roleplay-010.html
+https://namesrkewl.github.io/MHA-Roleplay/pages/MHA-Roleplay-011.html
+https://namesrkewl.github.io/MHA-Roleplay/pages/MHA-Roleplay-012.html
+https://namesrkewl.github.io/MHA-Roleplay/pages/MHA-Roleplay-013.html
+https://namesrkewl.github.io/MHA-Roleplay/pages/MHA-Roleplay-014.html
+https://namesrkewl.github.io/MHA-Roleplay/pages/MHA-Roleplay-015.html
+https://namesrkewl.github.io/MHA-Roleplay/pages/MHA-Roleplay-016.html
+https://namesrkewl.github.io/MHA-Roleplay/pages/MHA-Roleplay-017.html
+https://namesrkewl.github.io/MHA-Roleplay/pages/MHA-Roleplay-018.html
+https://namesrkewl.github.io/MHA-Roleplay/pages/MHA-Roleplay-019.html
+https://namesrkewl.github.io/MHA-Roleplay/pages/MHA-Roleplay-020.html
+https://namesrkewl.github.io/MHA-Roleplay/pages/MHA-Roleplay-021.html
+https://namesrkewl.github.io/MHA-Roleplay/pages/MHA-Roleplay-022.html
+https://namesrkewl.github.io/MHA-Roleplay/pages/MHA-Roleplay-023.html
