@@ -1,6 +1,7 @@
 {
   "source": "MHA-Roleplay.md",
   "char_limit": 8000,
+  "preview_chars": 100,
   "output_dir": "pages",
   "index": "index.md"
 }

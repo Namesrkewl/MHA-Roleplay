@@ -8,10 +8,12 @@ line break, then a space, and only as a last resort mid-word. Pages are an
 exact slice of the source, so joining them in order reproduces it.
 
 Index links are full github.com page URLs (not raw.githubusercontent.com),
-built from the repo and branch that GitHub Actions provides.
+built from the repo and branch that GitHub Actions provides. Each link is
+followed by a short preview of the page's opening text (`preview_chars`).
 """
 import json
 import os
+import re
 import shutil
 import sys
 from pathlib import Path
@@ -19,6 +21,8 @@ from urllib.parse import quote
 
 ROOT = Path(__file__).resolve().parent.parent
 BREAKS = ["\n\n---\n\n", "\n\n", "\n", " "]
+STRUCTURE_LINE = re.compile(r"^\s*(#{1,6}\s.*|[-*_]{3,})\s*$")  # headings, dividers
+URL = re.compile(r"https?://\S+")
 
 
 def paginate(text, limit):
@@ -39,6 +43,16 @@ def paginate(text, limit):
     return pages
 
 
+def preview(page, length):
+    """The first `length` characters of a page's text on one line. Headings,
+    dividers, URLs and * emphasis are dropped so the preview is plain story
+    text and the index contains no links other than the pages."""
+    lines = [l for l in page.splitlines() if l.strip() and not STRUCTURE_LINE.match(l)]
+    text = URL.sub("", " ".join(lines)).replace("*", "")
+    text = " ".join(text.split())
+    return text if len(text) <= length else text[:length].rstrip() + "…"
+
+
 def link_base():
     """Prefix for index links: the github.com page URL when running in Actions,
     or relative paths when testing locally."""
@@ -55,6 +69,7 @@ def main():
     config = json.loads((ROOT / "paginate.json").read_text(encoding="utf-8"))
     source = ROOT / config["source"]
     limit = int(config["char_limit"])
+    preview_chars = int(config.get("preview_chars", 0))
     out_dir = (ROOT / config.get("output_dir", "pages")).resolve()
     index = ROOT / config.get("index", "index.md")
 
@@ -78,7 +93,10 @@ def main():
         name = f"{source.stem}-{n:0{width}d}{source.suffix}"
         (out_dir / name).write_text(page, encoding="utf-8", newline="\n")
         rel = out_dir.relative_to(ROOT).as_posix() + "/" + name
-        links.append(f"- {base}{quote(rel)}")
+        line = f"- {base}{quote(rel)}"
+        if preview_chars > 0:
+            line += f" — {preview(page, preview_chars)}"
+        links.append(line)
 
     index.write_text("\n".join(links) + "\n", encoding="utf-8", newline="\n")
     print(f"{len(text)} chars -> {len(pages)} pages (limit {limit})")
