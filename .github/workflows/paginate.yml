@@ -1,0 +1,37 @@
+name: Paginate
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - "pages/**"
+      - "index.md"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: paginate
+  cancel-in-progress: false
+
+jobs:
+  paginate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Split source into pages and rebuild index
+        run: python3 scripts/paginate.py
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A pages index.md
+          if git diff --cached --quiet; then
+            echo "Pages already up to date."
+            exit 0
+          fi
+          git commit -m "Regenerate pages (limit: $(jq -r .char_limit paginate.json) chars)"
+          git push
