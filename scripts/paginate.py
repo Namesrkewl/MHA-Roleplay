@@ -11,6 +11,10 @@ The HTML site is deliberately minimal (no JavaScript, one line of CSS) so an
 agent reading it gets the story text without GitHub's page overhead. Index
 links point at the GitHub Pages HTML files; the base URL comes from the
 PAGES_BASE_URL environment variable set by the workflow.
+
+A second, plain-text index (`agent_index`) has a short explanation, the main
+page link and every page link with no previews, meant for pasting into an
+AI agent.
 """
 import html
 import json
@@ -39,6 +43,13 @@ HTML_PAGE = """<!DOCTYPE html>
 </body>
 </html>
 """
+
+AGENT_BLURB = (
+    "{name} is a roleplay transcript (alternating User and Model turns) split into "
+    "{count} numbered pages of up to {limit} characters each, in story order. Pages "
+    "break between turns where possible, so read them in sequence; each is a plain "
+    "HTML page. The main page lists every page with a short preview of how it opens."
+)
 
 
 def paginate(text, limit):
@@ -95,6 +106,7 @@ def main():
     out_dir = (ROOT / config.get("output_dir", "pages")).resolve()
     site_dir = (ROOT / config.get("site_dir", "_site")).resolve()
     index = ROOT / config.get("index", "index.md")
+    agent_index = ROOT / config.get("agent_index", "agent-index.txt")
 
     if limit < 1:
         sys.exit("char_limit must be at least 1")
@@ -112,7 +124,7 @@ def main():
 
     base = pages_base_url()
     width = max(3, len(str(len(pages))))
-    md_lines, html_items = [], []
+    urls, md_lines, html_items = [], [], []
     for n, page in enumerate(pages, 1):
         stem = f"{source.stem}-{n:0{width}d}"
         (out_dir / f"{stem}{source.suffix}").write_text(page, encoding="utf-8", newline="\n")
@@ -121,6 +133,7 @@ def main():
             encoding="utf-8", newline="\n")
 
         url = base + quote(f"{site_pages.relative_to(site_dir).as_posix()}/{stem}.html")
+        urls.append(url)
         blurb = preview(page, preview_chars) if preview_chars > 0 else ""
         md_lines.append(f"- {url} — {blurb}" if blurb else f"- {url}")
         link = f'<a href="{html.escape(url)}">{html.escape(url)}</a>'
@@ -131,6 +144,18 @@ def main():
         HTML_PAGE.format(title=html.escape(source.stem),
                          body="<ul>\n" + "\n".join(html_items) + "\n</ul>"),
         encoding="utf-8", newline="\n")
+
+    agent_text = "\n".join([
+        AGENT_BLURB.format(name=source.stem, count=len(pages), limit=limit),
+        "",
+        f"Main page: {base or 'index.html'}",
+        "",
+        "Pages:",
+        *urls,
+    ]) + "\n"
+    agent_index.write_text(agent_text, encoding="utf-8", newline="\n")
+    (site_dir / agent_index.name).write_text(agent_text, encoding="utf-8", newline="\n")
+
     print(f"{len(text)} chars -> {len(pages)} pages (limit {limit}); site in {site_dir.name}/")
 
 

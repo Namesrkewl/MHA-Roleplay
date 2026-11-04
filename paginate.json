@@ -4,5 +4,6 @@
   "preview_chars": 100,
   "output_dir": "pages",
   "site_dir": "_site",
-  "index": "index.md"
+  "index": "index.md",
+  "agent_index": "agent-index.txt"
 }
